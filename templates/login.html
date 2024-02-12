@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Login
+{% endblock %}
+
+{% block main %}
+    <h1 class="rainbow-title">Study Tracker</h1>
+    <br><br>
+    <table class="table table-bordered col-md-2 col-10" style="margin: 0 auto;">
+        <thead>
+            <tr>
+                <th scope="col">
+                    <h3>Login</h3>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">
+                    <form action="/login" method="post">
+                        <input class="form-control" name="username" placeholder="Username" type="text" required><br>
+                        <input class="form-control" name="password" placeholder="Password" type="password" required><br>
+                        <button class="btn btn-primary btn-lg" type="submit">Login</button>
+                    </form>
+                    <br>
+                    {% if m != None %}
+                        <p style="color: green;">{{m}}</p>
+                    {% endif %}
+                    <p style="color: red;">{{warning}}</p>
+                </th>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <a href="/register">Do not have an account yet?</a>
+{% endblock %}

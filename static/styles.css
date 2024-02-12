@@ -1,0 +1,7 @@
+.rainbow-title {
+    background-image: linear-gradient(to left, violet, indigo, pink, blue);   -webkit-background-clip: text;
+    color: transparent;
+    font-size: 3rem;
+    font-weight: bold;
+    margin: 0.5%
+}

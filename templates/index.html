@@ -1,0 +1,135 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Study Tracker
+{% endblock %}
+
+{% block main %}
+    <h1 class="rainbow-title">Study Tracker</h1>
+    <div style="display: flex; justify-content: space-between;">
+        <div style="margin-right: auto;"></div>
+        <div>
+            <p></p>
+        </div>
+        <div style="margin-left: auto;">
+            <a href="/login" style="display: inline-block;">Log out</a>
+        </div>
+    </div>
+    <br><br>
+    <p></p>
+    <table class="table table-bordered col-md-6 col-10" style="margin: 0 auto;">
+        <thead>
+            <tr>
+                <th scope="col">
+                    <h3>Session Time &#9202;</h3>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">
+                    <h2 id="act-timer" name="act" style="margin: 6%;">00:00:00</h2>
+                </th>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>
+                    <form action="/" method="post">
+                        <button type="button" id="bstart" class="btn btn-primary btn-lg">Start</button>
+                        <button type="button" id="bpause" class="btn btn-secondary btn-lg">Pause</button>
+                        <button type="submit" id="bstop" class="btn btn-danger btn-lg">Stop</button>
+                        <input type="hidden" id="tinput" name="time">
+                    </form>
+                </th>
+            </tr>
+        </tfoot>
+    </table>
+    <br><br>
+    <h1 style="font-weight: bold;">Today's study time overview</h1>
+    <h2>{{dt[0]}} Hours {{dt[1]}} Minutes {{dt[2]}} Seconds</h2>
+    <br><br>
+    <h1 style="font-weight: bold;">Study time records</h1>
+    <table class="table table-striped col-md-6 col-10" style="margin: 0 auto;">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sd in data %}
+            <tr>
+                <td>{{sd[2]}}</td>
+                <td>{{sd[1]}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        const actTimer = document.querySelector("#act-timer")
+        const bStart = document.querySelector("#bstart")
+        const bPause = document.querySelector("#bpause")
+        const bStop = document.querySelector("#bstop")
+
+        let hrs = 0;
+        let min = 0;
+        let sec = 0;
+
+        let tStart = 0;
+        let tElaps = 0;
+        let tCurrent = 0;
+
+        let paused = true;
+        let interval;
+
+        bStart.addEventListener("click", () => {
+            if(paused){
+                paused = false;
+                tStart = Date.now() - tElaps;
+                interval = setInterval(updateTime, 75)
+            }
+        });
+        bPause.addEventListener("click", () => {
+            if(!paused){
+                paused = true;
+                tElaps = Date.now() - tStart;
+                clearInterval(interval);
+            }
+        });
+        bStop.addEventListener("click", () => {
+            paused = true;
+            clearInterval(interval);
+
+            hrs = 0;
+            min = 0;
+            sec = 0;
+
+            tStart = 0;
+            tElaps = 0;
+            tCurrent = 0;
+
+            document.getElementById('tinput').value = actTimer.textContent;
+            actTimer.textContent = "00:00:00";
+        });
+
+        function updateTime(){
+            tElaps = Date.now() - tStart;
+
+            sec = Math.floor(tElaps / 1000) % 60;
+            min = Math.floor(tElaps / (1000 * 60)) % 60;
+            hrs = Math.floor(tElaps / (1000 * 60 * 60)) % 60;
+
+            sec = pad(sec);
+            min = pad(min);
+            hrs = pad(hrs);
+
+            actTimer.textContent = `${hrs}:${min}:${sec}`;
+
+            function pad(unit){
+                return (("0") + unit).length > 2 ? unit : "0" + unit;
+            }
+        }
+    </script>
+{% endblock %}
